@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Артур Зайцев | Сайт-визитка</title>
+  <meta name="description" content="Персональный сайт-визитка Артура Зайцева: студента 2 курса. Навыки, pet-проекты, образование и контакты.">
+  <meta name="author" content="Артур Зайцев">
+  <meta name="theme-color" content="#1b4fd8">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231b4fd8'/%3E%3Ctext x='16' y='23' font-family='Arial, sans-serif' font-size='17' font-weight='bold' fill='%23ffffff' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Skip-link: первая ссылка в DOM, видна только при фокусе с клавиатуры -->
+  <a class="skip-link" href="#main-content">Перейти к основному содержанию</a>
+
+  <!-- ====================================================================
+       HEADER: имя, должность, основная навигация
+       ==================================================================== -->
+  <header class="site-header">
+    <div class="container header__inner">
+      <div class="identity">
+        <p class="identity__name">Артур Зайцев</p>
+        <p class="identity__role">Студент 2 курса · Frontend · Junior focused</p>
+      </div>
+
+      <nav class="site-nav" aria-label="Основная навигация по разделам страницы">
+        <ul class="site-nav__list">
+          <li><a href="#about">Обо мне</a></li>
+          <li><a href="#experience">Опыт</a></li>
+          <li><a href="#education">Образование</a></li>
+          <li><a href="#contacts">Контакты</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ====================================================================
+       MAIN
+       ==================================================================== -->
+  <main id="main-content">
+
+    <!-- ------------------------------------------------------------------
+         HERO
+         ------------------------------------------------------------------ -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container hero__inner">
+
+        <div class="hero__content">
+          <p class="hero__eyebrow">Сайт-визитка</p>
+          <h1 id="hero-title">Артур Зайцев — в активном изучении frontend-разработки</h1>
+
+          <p class="hero__lead">
+            Приветствую! Сейчас я изучаю семантичную, адаптивную и доступную вёрстку на чистом
+            HTML5 и CSS3. Когда разметка читается без стилей, а интерфейс
+            работает с клавиатуры и мобильного экрана так же хорошо, как с мышью — это настоящая благодать.
+          </p>
+          <p class="hero__lead">
+            Сейчас активно учусь в университете, пробую выполнять первые работы (не связаны с Web)
+            на стороне. Не исключаю плотно заняться и frontend разработкой в ближайшем будущем.
+          </p>
+
+          <div class="hero__actions">
+            <a class="btn btn--primary" href="#contacts">Связаться</a>
+            <a class="btn btn--ghost" href="#experience">Смотреть проекты</a>
+          </div>
+        </div>
+
+        <figure class="hero__figure">
+          <!--
+            Аватар — векторный SVG в data-URI: он масштабируется без потерь,
+            поэтому srcset/sizes для него не нужны. При замене на растровое
+            фото добавьте srcset и sizes (пример — в README.md).
+          -->
+          <img
+            class="hero__avatar"
+            src="image/avatar.jpg"
+            sizes="(max-width: 600px) 240px, 480px"
+            width="480"
+            height="480"
+            alt="Портрет Артура Зайцева"
+            loading="lazy"
+            decoding="async">
+          <figcaption>Артур Зайцев, начинающий frontend-разработку</figcaption>
+        </figure>
+
+      </div>
+    </section>
+
+    <!-- ------------------------------------------------------------------
+         ABOUT
+         ------------------------------------------------------------------ -->
+    <section class="section" id="about" aria-labelledby="about-title">
+      <div class="container section__grid">
+
+        <header class="section__head">
+          <p class="section__index" aria-hidden="true">01</p>
+          <h2 id="about-title">Обо мне</h2>
+        </header>
+
+        <div class="section__body">
+
+          <p>
+            Меня зовут Артур, мне 21 год, я родом из Забайкальского края. Год назад я
+            начал активно изчуать веб-разработку в своём вузе. Начал с HTML и CSS, затем закончил
+            практической работой с Figma. За это время собрал несколько
+            небольших сайтов и понял, что больше всего внимания уделялось вёрстке —
+            эта часть работы, где аккуратность и внимание к деталям необходимы сразу.
+          </p>
+          <p>
+            Мне предстоит еще многому научиться,
+            но я не унываю, и продолжаю «грызть» гранит науки, вкладываясь в знания и навыки.
+            Моё мнение, что доступность и простота — самое важное для клиента.
+          </p>
+
+          <div class="skill-groups">
+
+            <section class="card" aria-labelledby="hard-skills-title">
+              <h3 id="hard-skills-title">My Hard skills</h3>
+              <ul class="tag-list">
+                <li class="tag">HTML5</li>
+                <li class="tag">CSS3</li>
+                <li class="tag">Семантическая разметка</li>
+                <li class="tag">Flexbox</li>
+                <li class="tag">CSS Grid</li>
+                <li class="tag">Адаптивная вёрстка</li>
+                <li class="tag">Mobile-first</li>
+                <li class="tag">Доступность</li>
+                <li class="tag">Git</li>
+                <li class="tag">GitHub</li>
+                <li class="tag">Figma</li>
+                <li class="tag">JavaScript (на уровне подключения)</li>
+              </ul>
+            </section>
+
+            <section class="card" aria-labelledby="soft-skills-title">
+              <h3 id="soft-skills-title">My Soft skills</h3>
+              <ul class="tag-list">
+                <li class="tag">Внимательность к деталям</li>
+                <li class="tag">Написание чёткой документации</li>
+                <li class="tag">Самостоятельность</li>
+                <li class="tag">Коммуникация в команде</li>
+                <li class="tag">Открытость к обратной связи</li>
+                <li class="tag">Планирование времени</li>
+              </ul>
+            </section>
+
+          </div>
+
+          <section class="card" aria-labelledby="interests-title">
+            <h3 id="interests-title">Интересы</h3>
+            <ul>
+              <li>Геймдев и игровая разработка — самый костяк из интересов.</li>
+              <li>3D моделирование и графика — уже есть своё небольшое портфолио.</li>
+              <li>Саунд-дизайн — пускай только и первые потуги.</li>
+              <li>Вне учёбы — велосипед, плавание и настольные игры.</li>
+            </ul>
+          </section>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ------------------------------------------------------------------
+         EXPERIENCE
+         ------------------------------------------------------------------ -->
+    <section class="section section--alt" id="experience" aria-labelledby="experience-title">
+      <div class="container section__grid">
+
+        <header class="section__head">
+          <p class="section__index" aria-hidden="true">02</p>
+          <h2 id="experience-title">Опыт</h2>
+        </header>
+
+        <div class="section__body">
+
+          <div class="notice">
+            <h3>Опыта работы нет</h3>
+            <p>
+              Официального трудоустройства в IT у меня пока не было — я честно
+              лучше укажу на это. Вместо коммерческого опыта у меня есть системное
+              обучение в университете, несколько завершённых pet-проектов и огромное желание
+              и готовность быстро включаться в задачи под наставничеством.
+            </p>
+          </div>
+
+          <h3>Моя учебная практика</h3>
+
+          <ul class="timeline">
+
+            <li class="timeline__item">
+              <article class="card">
+                <h4>Первый сайт на голом HTML</h4>
+                <p class="card__meta">
+                  <time datetime="2025-11">Февраль-Март 2026</time>
+                </p>
+                <p>
+                  Это был в принципе первый работы с вёрсткой и HTML в целом.
+                  Минмально оформленный внешний вид и первые попытки разобраться с семнантикой
+                  без Flexbox. Реализованы aside, и более менее корректная
+                  работа при 200% масштабе текста.
+                </p>
+                <ul class="tag-list">
+                  <li class="tag">HTML5</li>
+                  <li class="tag">Aside</li>
+                  <li class="tag">Первые шаги</li>
+                </ul>
+              </article>
+            </li>
+
+            <li class="timeline__item">
+              <article class="card">
+                <h4>Лендинг отеля «Мятный сон»</h4>
+                <p class="card__meta">
+                  <time datetime="2026-03">Март 2026</time> — <time datetime="2026-05">Май 2026</time>
+                </p>
+                <p>
+                  Учебный проект по макету из Figma и документации по ГОСТУ: адаптивная
+                  вёрстка для трёх контрольных точек, мобильное меню на чистом CSS, 
+                  базовая оптимизация изображений и проверка контраста всех текстовых пар.
+                </p>
+                <ul class="tag-list">
+                  <li class="tag">Адаптивная вёрстка</li>
+                  <li class="tag">Перемещение по разделам сайта</li>
+                  <li class="tag">Figma</li>
+                  <li class="tag">ТЗ по ГОСТУ</li>
+                  <li class="tag">JS скрипты</li>
+                </ul>
+              </article>
+            </li>
+
+            <li class="timeline__item">
+              <article class="card">
+                <h4>Этот сайт-визитка</h4>
+                <p class="card__meta">
+                  <time datetime="2026-09">Сентябрь 2026</time> — <time datetime="2026-09">Сейчас</time>
+                </p>
+                <p>
+                  Первый сайт для проверки текущих способностей нейросетей.
+                  Нужно идти в ногу со временем, и учиться грамотно применять
+                  ИИ для написания промтов, фрагментов верстки или оформления.
+                  А также в качестве пояснения и нахождения ошибок в коде.
+                </p>
+                <ul class="tag-list">
+                  <li class="tag">HTML</li>
+                  <li class="tag">CSS</li>
+                  <li class="tag">AI</li>
+                  <li class="tag">GitPages</li>
+                </ul>
+              </article>
+            </li>
+
+          </ul>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ------------------------------------------------------------------
+         EDUCATION
+         ------------------------------------------------------------------ -->
+    <section class="section" id="education" aria-labelledby="education-title">
+      <div class="container section__grid">
+
+        <header class="section__head">
+          <p class="section__index" aria-hidden="true">03</p>
+          <h2 id="education-title">Образование</h2>
+        </header>
+
+        <div class="section__body">
+
+          <h3>Учебные заведения</h3>
+
+          <ul class="timeline">
+            <li class="timeline__item">
+              <article class="card">
+                <h4>Забайкальская Краевая Гимназия-интернат</h4>
+                <p class="card__meta">
+                  Среднее-общее образование·
+                  <time datetime="2012">2012</time> — <time datetime="2023">2023</time>
+                </p>
+                <p>
+                  Здесь я отучился все 11 лет и получил первичные знания.
+                  Благодаря учителям этой гимназии мне удалось в итоге поступить
+                  в университет уже в Санкт-Петербурге.
+                </p>
+              </article>
+            </li>
+          </ul>
+
+<ul class="timeline">
+            <li class="timeline__item">
+              <article class="card">
+                <h4>Санкт-Петербургский государственный университет промышленных технологий и дизайна (СПбГУПТД)</h4>
+                <p class="card__meta">
+                  Высшее образование. В процессе обучения·
+                  <time datetime="2023">2023</time> — <time datetime="2026">2026</time>
+                </p>
+                <p>
+                  На данный момент это главное заведение, в котором я сейчас учусь.
+                  На момент написания этого текста я на 2 курсе «Прикладной информатики».
+                  Здесь мне предстоит ещё многому научиться.
+                </p>
+              </article>
+            </li>
+          </ul>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ------------------------------------------------------------------
+         CONTACTS
+         ------------------------------------------------------------------ -->
+    <section class="section section--alt" id="contacts" aria-labelledby="contacts-title">
+      <div class="container section__grid">
+
+        <header class="section__head">
+          <p class="section__index" aria-hidden="true">04</p>
+          <h2 id="contacts-title">Контакты</h2>
+        </header>
+
+        <div class="section__body contacts">
+
+          <div class="contacts__info">
+            <h3>Как со мной связаться</h3>
+
+            <address class="vcard">
+              <ul class="contact-list">
+                <li>
+                  <span class="contact-list__label">Email</span>
+                  <a href="mailto:alexey.morozov@example.com">zayes007@mail.ru</a>
+                </li>
+                <li>
+                  <span class="contact-list__label">Телефон</span>
+                  <a href="tel:+79001234567">+7 (991) 675-41-22</a>
+                </li>
+                <li>
+                  <span class="contact-list__label">GitHub</span>
+                  <a href="https://github.com/semidark13"
+                     target="_blank"
+                     rel="noopener noreferrer">
+                    github.com/semidark13
+                    <span class="visually-hidden">(откроется в новой вкладке)</span>
+                  </a>
+                </li>
+              </ul>
+            </address>
+
+            <p class="contacts__note">
+              Отвечаю на письма в течение одного рабочего дня. Предпочтительный
+              способ связи — телефон либо электронная почта.
+            </p>
+          </div>
+
+          <form class="contact-form"
+                action="#"
+                method="post"
+                aria-labelledby="form-title">
+            <h3 id="form-title">Написать мне</h3>
+
+            <p class="form__hint" id="form-hint">
+              Примечание: Все поля обязательны для заполнения!
+            </p>
+
+            <div class="field">
+              <label for="name">Имя</label>
+              <input type="text"
+                     id="name"
+                     name="name"
+                     autocomplete="name"
+                     required
+                     aria-describedby="name-hint">
+              <p class="field__hint" id="name-hint">Как к вам обращаться.</p>
+            </div>
+
+            <div class="field">
+              <label for="email">Email</label>
+              <input type="email"
+                     id="email"
+                     name="email"
+                     autocomplete="email"
+                     required
+                     aria-describedby="email-hint">
+              <p class="field__hint" id="email-hint">
+                Адрес, на который я смогу ответить.
+              </p>
+            </div>
+
+            <div class="field">
+              <label for="message">Сообщение</label>
+              <textarea id="message"
+                        name="message"
+                        rows="6"
+                        required
+                        aria-describedby="message-hint"></textarea>
+              <p class="field__hint" id="message-hint">
+                Расскажите о себе, вакансии, проекте или задаче.
+              </p>
+            </div>
+
+            <button class="btn btn--primary" type="submit">Отправить сообщение</button>
+          </form>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ====================================================================
+       FOOTER
+       ==================================================================== -->
+  <footer class="site-footer">
+    <div class="container footer__inner">
+      <p class="footer__copy">© 2026 Артур Зайцев. Все права защищены.</p>
+
+      <address class="footer__contacts">
+        <a href="mailto:alexey.morozov@example.com">zayes007@mail.ru</a>
+        <a href="tel:+79001234567">+7 (991) 675-41-22</a>
+        <a href="https://github.com/semidark13"
+           target="_blank"
+           rel="noopener noreferrer">
+          GitHub<span class="visually-hidden"> (откроется в новой вкладке)</span>
+        </a>
+      </address>
+    </div>
+  </footer>
+
+</body>
+</html>

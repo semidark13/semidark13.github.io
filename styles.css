@@ -1,0 +1,903 @@
+/* ==========================================================================
+
+   Структура:
+   1.  Токены дизайна
+   2.  Сброс и базовая типографика
+   3.  Утилиты (container, visually-hidden, skip-link, фокус)
+   4.  Каркас страницы (CSS Grid)
+   5.  Header и навигация (Flexbox)
+   6.  Hero
+   7.  Секции: общий каркас
+   8.  Компоненты: карточки, теги, таймлайн, notice
+   9.  Контакты и форма
+   10. Футер
+   11. Пользовательские настройки (reduced motion, high contrast)
+
+   Подход: mobile-first. Все базовые правила — для мобильных,
+   далее медиазапросы для 768px (48em) и 1280px (80em).
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. ТОКЕНЫ ДИЗАЙНА
+   ========================================================================== */
+
+:root {
+  /* Цвета. Контраст текстовых пар проверен и соответствует WCAG 2.2 AA. */
+  --color-bg: #ffffff;
+  --color-surface: #f4f6fb;
+  --color-surface-strong: #e8ecf7;
+  --color-text: #131722;              /* на #ffffff — 17.4:1 */
+  --color-text-muted: #4d5871;        /* на #ffffff — 7.0:1  */
+  --color-accent: #1b4fd8;            /* на #ffffff — 6.6:1  */
+  --color-accent-strong: #143a9e;
+  --color-accent-soft: #eef2ff;
+  --color-on-accent: #ffffff;         /* на #1b4fd8 — 6.6:1  */
+  --color-border: #d5dbe8;            /* декоративные границы */
+  --color-border-strong: #6b7689;     /* границы полей ввода — 4.6:1 на белом */
+  --color-focus: #0b3ea8;
+  --color-focus-inverse: #c7d2fe;
+
+  /* Тёмная подложка футера */
+  --color-footer-bg: #131722;
+  --color-footer-text: #e8ecf7;
+  --color-footer-muted: #aab3c7;      /* на #131722 — 8.6:1 */
+
+  /* Скругления */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-pill: 999px;
+
+  /* Тени */
+  --shadow-sm: 0 1px 2px rgba(19, 23, 34, 0.06), 0 4px 12px rgba(19, 23, 34, 0.05);
+  --shadow-md: 0 12px 32px rgba(19, 23, 34, 0.10);
+
+  /* Типографика */
+  --font-sans: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+
+  /* Размеры макета */
+  --container-max: 72rem;                        /* 1152px */
+  --gutter: clamp(1rem, 4vw, 2.5rem);
+  --section-space: clamp(2.5rem, 7vw, 4.5rem);
+
+  /* Высота «липкой» шапки — используется для scroll-margin */
+  --header-offset: 6.5rem;
+}
+
+
+/* ==========================================================================
+   2. СБРОС И БАЗОВАЯ ТИПОГРАФИКА
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  /* Плавная прокрутка по якорям; отключается при reduced motion ниже */
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  /* Каркас страницы: шапка — контент — подвал.
+     Это тот самый CSS Grid для основной структуры. */
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.65;
+
+  /* Защита от горизонтального скролла длинными словами
+     (в том числе при 200% масштабе текста) */
+  overflow-wrap: break-word;
+  hyphens: manual;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0 0 0.5em;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: clamp(1.75rem, 1.15rem + 2.6vw, 2.75rem);
+}
+
+h2 {
+  font-size: clamp(1.5rem, 1.15rem + 1.5vw, 2.125rem);
+}
+
+h3 {
+  font-size: clamp(1.125rem, 1.03rem + 0.5vw, 1.375rem);
+}
+
+h4 {
+  font-size: 1.0625rem;
+}
+
+p {
+  margin: 0 0 1em;
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+ul,
+ol {
+  margin: 0 0 1em;
+  padding-left: 1.25rem;
+}
+
+ul:last-child,
+ol:last-child {
+  margin-bottom: 0;
+}
+
+li + li {
+  margin-top: 0.25rem;
+}
+
+a {
+  color: var(--color-accent);
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: var(--color-accent-strong);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+address {
+  font-style: normal;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+/* Целевые элементы якорей: отступ, чтобы «липкая» шапка
+   не перекрывала заголовок раздела */
+[id] {
+  scroll-margin-top: 1rem;
+}
+
+
+/* ==========================================================================
+   3. УТИЛИТЫ
+   ========================================================================== */
+
+/* Контейнер: ограничивает ширину и задаёт боковые отступы */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Визуально скрытый, но доступный скринридеру текст */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Skip-link: скрыт, пока не получит фокус с клавиатуры */
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 100;
+  transform: translate(-50%, -150%);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.18s ease;
+}
+
+.skip-link:focus {
+  transform: translate(-50%, 0);
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* Единый видимый фокус для всех интерактивных элементов */
+:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+
+/* ==========================================================================
+   4. КАРКАС СТРАНИЦЫ — уже задан на body через CSS Grid.
+      Здесь только правки для «липкой» шапки.
+   ========================================================================== */
+
+
+/* ==========================================================================
+   5. HEADER И НАВИГАЦИЯ
+   ========================================================================== */
+
+.site-header {
+  /* На мобильных шапка не «липкая»: она занимает несколько строк,
+     и фиксировать её на маленьком экране неудобно. */
+  position: static;
+  z-index: 30;
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.header__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  padding-block: 0.875rem;
+}
+
+.identity {
+  min-width: 0;
+}
+
+.identity__name {
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.identity__role {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.site-nav__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-nav__list li + li {
+  margin-top: 0;
+}
+
+.site-nav__list a {
+  display: block;
+  padding: 0.45rem 0.7rem;
+  border-radius: var(--radius-pill);
+  color: var(--color-text);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.site-nav__list a:hover {
+  background-color: var(--color-surface-strong);
+  color: var(--color-accent-strong);
+}
+
+
+/* ==========================================================================
+   6. HERO
+   ========================================================================== */
+
+.hero {
+  border-bottom: 1px solid var(--color-border);
+  background-image:
+    radial-gradient(60rem 30rem at 100% -10%, var(--color-accent-soft), transparent 70%);
+}
+
+.hero__inner {
+  display: grid;
+  gap: clamp(1.75rem, 6vw, 3rem);
+  padding-block: var(--section-space);
+}
+
+.hero__eyebrow {
+  margin: 0 0 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.hero__lead {
+  max-width: 42rem;
+  color: var(--color-text-muted);
+  font-size: clamp(1rem, 0.95rem + 0.3vw, 1.125rem);
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.75rem;
+}
+
+.hero__figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.875rem;
+  margin: 0;
+}
+
+.hero__avatar {
+  width: min(100%, 18rem);
+  height: auto;
+  border: 4px solid #ffffff;
+  border-radius: 50%;
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-md);
+}
+
+.hero__figure figcaption {
+  max-width: 20rem;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+
+/* ==========================================================================
+   7. СЕКЦИИ: ОБЩИЙ КАРКАС
+   ========================================================================== */
+
+.section {
+  padding-block: var(--section-space);
+}
+
+.section--alt {
+  background-color: var(--color-surface);
+}
+
+/* Основная сетка секции: слева — заголовок, справа — содержимое.
+   На мобильных это одна колонка. */
+.section__grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.section__head {
+  min-width: 0;
+}
+
+.section__index {
+  margin: 0 0 0.25rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--color-accent);
+}
+
+.section__head h2 {
+  margin: 0;
+}
+
+.section__body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  /* Критично: не даёт содержимому растянуть грид-колонку
+     и вызвать горизонтальный скролл */
+  min-width: 0;
+}
+
+.section__body > h3 {
+  margin: 0;
+}
+
+
+/* ==========================================================================
+   8. КОМПОНЕНТЫ
+   ========================================================================== */
+
+/* --- Кнопки ------------------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  max-width: 100%;
+  padding: 0.8rem 1.5rem;
+  border: 2px solid transparent;
+  border-radius: var(--radius-pill);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.18s ease, color 0.18s ease,
+              border-color 0.18s ease;
+}
+
+.btn--primary {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.btn--primary:hover {
+  background-color: var(--color-accent-strong);
+  border-color: var(--color-accent-strong);
+  color: var(--color-on-accent);
+}
+
+.btn--ghost {
+  background-color: transparent;
+  border-color: var(--color-border-strong);
+  color: var(--color-text);
+}
+
+.btn--ghost:hover {
+  background-color: var(--color-surface-strong);
+  border-color: var(--color-accent);
+  color: var(--color-accent-strong);
+}
+
+/* --- Карточки ----------------------------------------------------------- */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  padding: clamp(1rem, 3vw, 1.5rem);
+  background-color: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.card h3,
+.card h4 {
+  margin: 0;
+}
+
+.card p {
+  margin: 0;
+}
+
+.card ul:not(.tag-list) {
+  margin: 0;
+  padding-left: 1.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.card__meta {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+/* --- Группы навыков ----------------------------------------------------- */
+
+.skill-groups {
+  display: grid;
+  gap: 1rem;
+
+  /* Авто-подгонка колонок без медиазапросов:
+     min(100%, 15rem) не даёт колонке стать шире контейнера */
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+}
+
+/* --- Теги --------------------------------------------------------------- */
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tag-list li + li {
+  margin-top: 0;
+}
+
+.tag {
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-surface);
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+/* На сером фоне секции теги и карточки делаем белыми,
+   чтобы сохранить контраст границ */
+.section--alt .tag {
+  background-color: #ffffff;
+}
+
+.section--alt .notice {
+  background-color: #ffffff;
+}
+
+/* --- Таймлайн ----------------------------------------------------------- */
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.timeline__item {
+  min-width: 0;
+}
+
+.timeline__item + .timeline__item {
+  margin-top: 0;
+}
+
+/* --- Блок-уведомление --------------------------------------------------- */
+
+.notice {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: clamp(1rem, 3vw, 1.5rem);
+  border: 1px solid var(--color-accent);
+  border-left-width: 6px;
+  border-radius: var(--radius-md);
+  background-color: var(--color-accent-soft);
+}
+
+.notice h3 {
+  margin: 0;
+  color: var(--color-accent-strong);
+}
+
+.notice p {
+  margin: 0;
+}
+
+
+/* ==========================================================================
+   9. КОНТАКТЫ И ФОРМА
+   ========================================================================== */
+
+.contacts {
+  display: grid;
+  gap: 2rem;
+}
+
+.contacts__info {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.contacts__info h3 {
+  margin: 0;
+}
+
+.contacts__note {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: var(--color-text-muted);
+}
+
+.contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.contact-list li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  margin: 0;
+  min-width: 0;
+}
+
+.contact-list__label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.contact-list a {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+/* --- Форма -------------------------------------------------------------- */
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.125rem;
+  padding: clamp(1rem, 3vw, 1.75rem);
+  background-color: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  min-width: 0;
+}
+
+.contact-form h3 {
+  margin: 0;
+}
+
+.form__hint {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  min-width: 0;
+}
+
+.field label {
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  max-width: 100%;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background-color: #ffffff;
+  color: var(--color-text);
+}
+
+.field input:hover,
+.field textarea:hover {
+  border-color: var(--color-accent);
+}
+
+.field textarea {
+  min-height: 9rem;
+  resize: vertical;
+}
+
+.field__hint {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.contact-form .btn {
+  align-self: flex-start;
+}
+
+
+/* ==========================================================================
+   10. ФУТЕР
+   ========================================================================== */
+
+.site-footer {
+  padding-block: clamp(1.5rem, 4vw, 2.5rem);
+  background-color: var(--color-footer-bg);
+  color: var(--color-footer-text);
+}
+
+.footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+}
+
+.footer__copy {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--color-footer-muted);
+}
+
+.footer__contacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  min-width: 0;
+}
+
+.footer__contacts a {
+  color: var(--color-footer-text);
+  font-size: 0.9375rem;
+  overflow-wrap: anywhere;
+}
+
+.footer__contacts a:hover {
+  color: var(--color-focus-inverse);
+}
+
+/* На тёмном фоне синий фокус читается плохо — меняем цвет */
+.site-footer :focus-visible {
+  outline-color: var(--color-focus-inverse);
+}
+
+
+/* ==========================================================================
+   11. АДАПТИВНОСТЬ
+   ========================================================================== */
+
+/* --- 768px -------------------------------------------------------------- */
+@media (min-width: 48em) {
+
+  .site-header {
+    position: sticky;
+    top: 0;
+    background-color: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  [id] {
+    scroll-margin-top: var(--header-offset);
+  }
+
+  .hero__inner {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    align-items: center;
+  }
+
+  .hero__figure {
+    justify-self: end;
+    width: 100%;
+  }
+
+  .section__grid {
+    grid-template-columns: minmax(9rem, 13rem) minmax(0, 1fr);
+    gap: 2.5rem;
+    align-items: start;
+  }
+}
+
+/* --- 1024px: контакты в две колонки ------------------------------------- */
+@media (min-width: 64em) {
+
+  .contacts {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    gap: 2.5rem;
+    align-items: start;
+  }
+}
+
+/* --- 1280px: больше воздуха --------------------------------------------- */
+@media (min-width: 80em) {
+
+  :root {
+    --section-space: 5.5rem;
+  }
+
+  .section__grid {
+    grid-template-columns: minmax(11rem, 15rem) minmax(0, 1fr);
+    gap: 3.5rem;
+  }
+
+  .hero__inner {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+    gap: 4rem;
+  }
+
+  .hero__avatar {
+    width: min(100%, 21rem);
+  }
+}
+
+
+/* ==========================================================================
+   12. ПОЛЬЗОВАТЕЛЬСКИЕ НАСТРОЙКИ
+   ========================================================================== */
+
+/* Уважаем настройку «уменьшить движение» */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Для тех, кто выбрал повышенный контраст в системе,
+   усиливаем границы и убираем полупрозрачность шапки */
+@media (prefers-contrast: more) {
+  :root {
+    --color-text-muted: #333d55;
+    --color-border: #6b7689;
+  }
+
+  .site-header {
+    background-color: #ffffff;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .card,
+  .contact-form,
+  .tag {
+    border-color: var(--color-border-strong);
+  }
+}
+
+/* Печать: убираем фоны и «липкую» шапку */
+@media print {
+  .site-header {
+    position: static;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .skip-link,
+  .hero__actions,
+  .contact-form {
+    display: none;
+  }
+
+  .section--alt,
+  .site-footer {
+    background: none;
+    color: #000000;
+  }
+}
